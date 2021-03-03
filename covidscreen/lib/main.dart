@@ -1,6 +1,8 @@
 import 'package:fhir/r4.dart';
 import 'package:fhir_at_rest/r4.dart';
 import 'package:flutter/material.dart';
+import 'package:oauth2/oauth2.dart' as oauth2;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'api.dart';
 import 'this_smart_client.dart';
@@ -152,18 +154,37 @@ class _CovidScreenState extends State<CovidScreen> {
 }
 
 Future<void> _sendCondition(bool present) async {
-  if (present) {
-    try {
-      final client = ThisSmartClient().client(Mihin.mihinUrl,
-          Mihin.mihinClientId, Mihin.redirectUrl, Mihin.mihinClientSecret);
-      final attempt = await client.login();
-      final upload = FhirRequest.create(
-          base: Uri.parse(Mihin.mihinUrl), resource: covidCondition());
-      final request = await upload.request(headers: await client.authHeaders);
-      print(request?.toJson());
-    } catch (e) {
-      print(e);
+  // if (present) {
+  //   try {
+  //     final client = ThisSmartClient().client(Mihin.mihinUrl,
+  //         Mihin.mihinClientId, Mihin.redirectUrl, Mihin.mihinClientSecret);
+  //     final attempt = await client.login();
+  //     final upload = FhirRequest.create(
+  //         base: Uri.parse(Mihin.mihinUrl), resource: covidCondition());
+  //     final request = await upload.request(headers: await client.authHeaders);
+  //     print(request?.toJson());
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+  try {
+    var grant = oauth2.AuthorizationCodeGrant(
+      Mihin.mihinClientId,
+      Uri.parse(
+          'https://smart-auth.interopland.com/r9rtfzdz/45353/mihinss/oauth2/authorize'),
+      Uri.parse(
+          'https://smart-auth.interopland.com/r9rtfzdz/45353/mihinss/oauth2/token'),
+      secret: Mihin.mihinClientSecret,
+    );
+
+    var authorizationUrl =
+        grant.getAuthorizationUrl(Uri.parse(Mihin.redirectUrl));
+
+    if (await canLaunch(authorizationUrl.toString())) {
+      await launch(authorizationUrl.toString());
     }
+  } catch (e) {
+    print(e);
   }
 }
 
