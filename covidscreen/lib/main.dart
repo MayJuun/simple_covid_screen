@@ -168,7 +168,7 @@ Future<void> _sendCondition(bool present) async {
 }
 
 Condition covidCondition() => Condition(
-      subject: Reference(reference: 'Patient/50443'),
+      subject: Reference(reference: 'Patient/SarahThompson'),
       clinicalStatus: CodeableConcept(
         coding: [
           Coding(
