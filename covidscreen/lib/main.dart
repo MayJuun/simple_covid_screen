@@ -168,7 +168,7 @@ Future<void> _sendCondition(bool present) async {
 }
 
 Condition covidCondition() => Condition(
-      subject: Reference(reference: 'Patient/SarahThompson'),
+      subject: Reference(reference: 'Patient/4890'),
       clinicalStatus: CodeableConcept(
         coding: [
           Coding(
@@ -194,7 +194,7 @@ Condition covidCondition() => Condition(
         coding: [
           Coding(
             system: FhirUri('http://snomed.info/sct'),
-            code: Code('3947197012'),
+            code: Code('840544004'),
             display: 'Suspected disease caused by severe acute '
                 'respiratory coronavirus 2 (situation)',
           ),
