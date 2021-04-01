@@ -154,11 +154,11 @@ class _CovidScreenState extends State<CovidScreen> {
 Future<void> _sendCondition(bool present) async {
   if (present) {
     try {
-      final client = ThisSmartClient().client(Mihin.mihinUrl,
-          Mihin.mihinClientId, Mihin.redirectUrl, Mihin.mihinClientSecret);
+      final client = ThisSmartClient().client(Api.mihinUrl, Api.mihinClientId,
+          Api.fhirCallback.toString(), Api.mihinSecret);
       final attempt = await client.login();
       final upload = FhirRequest.create(
-          base: Uri.parse(Mihin.mihinUrl), resource: covidCondition());
+          base: Uri.parse(Api.mihinUrl), resource: covidCondition());
       final request = await upload.request(headers: await client.authHeaders);
       print(request?.toJson());
     } catch (e) {
@@ -168,7 +168,7 @@ Future<void> _sendCondition(bool present) async {
 }
 
 Condition covidCondition() => Condition(
-      subject: Reference(reference: 'Patient/4890'),
+      subject: Reference(reference: 'Patient/SarahThompson'),
       clinicalStatus: CodeableConcept(
         coding: [
           Coding(
